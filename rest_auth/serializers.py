@@ -10,7 +10,7 @@ from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 
 from .models import TokenModel
-from .utils import import_callable
+from .utils import import_callable, user_email
 
 # Get the UserModel
 UserModel = get_user_model()
@@ -105,7 +105,7 @@ class LoginSerializer(serializers.Serializer):
         if 'rest_auth.registration' in settings.INSTALLED_APPS:
             from allauth.account import app_settings
             if app_settings.EMAIL_VERIFICATION == app_settings.EmailVerificationMethod.MANDATORY:
-                email_address = user.emailaddress_set.get(email=user.email)
+                email_address = user.emailaddress_set.get(email=user_email(user))
                 if not email_address.verified:
                     raise serializers.ValidationError(_('E-mail is not verified.'))
 
